@@ -1,0 +1,106 @@
+1) How do you find all the documents where the field “items” is “Mochas”?
+ANS)
+ db.sales.find(
+{ "item": "Mochas" }
+)
+
+2) How do you find all items who are less than 15 of price?
+ANS) 
+db.sales.find(
+{ "price": { $lt: 15 } }
+)
+
+3) How do find items who are either less than 10 or greater than 20?
+ANS)
+db.sales.find(
+{ $or: [
+ { "price": { $lt: 10 } },
+ { "price": { $gt: 20 } }
+]
+ }
+)
+
+4) How do you find all documents where the quantity field exists?
+ANS) 
+db.sales.find(
+	{ "quantity": { $exists: true } }
+)
+
+
+5) How do you find all documents where the color array contains the value “white”?
+ANS) 
+db.products.find(
+	{ "color": "white" }
+)
+
+6) How do you update the ram of the user named “xTablet” to 24?
+ANS)
+db.products.updateOne(
+	 { "name": "xTablet" },
+	 { $set: { "spec.ram": 24 } }
+)
+
+7) How do you find all products and only return their “spec” field?
+ANS)
+db.products.find(
+	{},
+	 { "spec": 1, "_id": 0 }
+)
+
+8) How do you din all products and sort them by their price in descending order?
+ANS) 
+db.products.find().sort(
+	{ "price": -1 }
+)
+
+
+
+9) How do you find the first 2 products, skipping the first one?
+ANS)
+db.products.find().skip(1).limit(2)
+
+10) How do you find all users whose name starts with the letter “S” and the price should be greater of 700?
+ANS)
+db.products.find(
+	{
+		 "name": { $regex: "^S" },
+		   "price": { $gt: 700 }
+	}
+)
+
+11) How do you calculate the total price of all items?
+ANS)
+db.products.aggregate([{
+	$group: { 
+		id: null, 
+		totalPrice: { $sum: "$price" }
+	}
+ }]) 
+
+12) How do you find project only the size field for each items?
+ANS) 
+db.sales.find({},
+	 { "size": 1, "_id": 0 }
+)
+13) How do find items who are tall size & group them by items wise?
+ANS)
+db.sales.aggregate([
+	   { $match: { "size": "Tall" } }, 
+	   { $group: { _id: "$item", count: { $sum: 1 } } } 
+])
+
+14) How do you find the second item when sorted by price in ascending order?
+ANS) 
+db.sales.find().sort({ "price": 1 }).skip(1).limit(1)
+
+15. How do you group by items and calculate the total number of items and average price in a single aggregation?
+ANS) 
+db.sales.aggregate([
+   { 
+      $group: { 
+         _id: "$item", 
+         totalItems: { $sum: 1 }, 
+         averagePrice: { $avg: "$price" } 
+      } 
+   }
+])
